@@ -1,0 +1,13 @@
+Package: RFirefoxData
+Version: 0.1-0
+Title: Get data from Firefox browser
+Description: This package aims to quere data from Firefox such as the open windows and tabs,
+ bookmarks, the history of URLs visited, logins for accounts, file handler actions,
+ extensions.
+ Initially, it focuses on windows and tabs so that I can programmatically examine
+ the large (> 500) tabs that I fequently have open and find when each tab was last
+ viewed.
+ This and the AutoClose extension I wrote tries to help me keep the number of tabs to a "reasonable" number.
+Author: Duncan Temple Lang
+Maintainer: Duncan Temple Lang <duncan@r-project.org>
+Imports: RJSONIO, RSQLite

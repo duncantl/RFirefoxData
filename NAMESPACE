@@ -1,0 +1,6 @@
+import(RJSONIO)
+import(RSQLite)
+export(bookmarks, bookmarkDF)
+
+export(fxTabList, tabInfo, oldTabs)
+export(places)
