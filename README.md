@@ -6,8 +6,10 @@ R tools that allow me to query information from my Firefox profile data.
 + pages visited
 + bookmarks
 
+<!--
 There are many other things we can programmatically extract and may add, e.g.,
 + downloads to be able to find the origin of a downloaded file.
+-->
 
 See also [RBrowserCookies](https://github.com/duncantl/RBrowserCookies.git) for reading cookies.
 
