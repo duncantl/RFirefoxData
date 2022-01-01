@@ -4,3 +4,8 @@ export(bookmarks, bookmarkDF)
 
 export(fxTabList, tabInfo, oldTabs)
 export(places)
+
+export(downloads)
+
+export(conPlacesDB)
+

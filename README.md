@@ -2,14 +2,15 @@
 
 R tools that allow me to query information from my Firefox profile data.
 
+These include 
+
 + open windows and tabs
 + pages visited
 + bookmarks
++ downloads
++ visit path
 
-<!--
-There are many other things we can programmatically extract and may add, e.g.,
-+ downloads to be able to find the origin of a downloaded file.
--->
+and general access to the places.sqlite database.
 
 See also [RBrowserCookies](https://github.com/duncantl/RBrowserCookies.git) for reading cookies.
 
@@ -54,7 +55,15 @@ We have the
 
 ## Visited sites
 
-`places()` returns a data.frame with a row for each page visited.
+`places()` returns a data.frame with a row for each page visited in the browser history.
+
+This can be useful to find, for example, 
++ all stackoverflow pages one has visited and by date. This can help find pages you recall, but
+  don't fully remember and need to find.
++ what pages you visit most ofen
++ 
+
+
 There are 17 columns (not in order)
 + title  - title of the page that appears in the <title>
 + description - possible longer of description of the page
@@ -75,3 +84,37 @@ There are 17 columns (not in order)
 
 
 (`site_name` is all NAs, at least in my database.)
+
+
+## Downloads
+
+`downloads()` allows us to find out when we downloaded a file and from where,
+and the collection of files from a particular site.
+
+`downloads()` returns a data.frame with 25 columns, joining
+the `moz_annos` table with the `moz_places` table in the `places.sqlite` database.
+
++ content
++ type
++ url
++ title
++ description
+
+
+
+## Connecting Places & Visits
+
+`visits()` joins the moz_historyvisits and moz_places table.
+This allows us to 
++ find the path we took to a particular page and the type of "hops" we took, e.g., following a link,
+  a bookmark, a download, a reload
++ when we visited pages
+
+
+
+## Accessing the places.sqlite Database
+
+```
+db = conPlacesDB()
+dbListTable(db)
+```

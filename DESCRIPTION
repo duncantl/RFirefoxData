@@ -11,3 +11,4 @@ Description: This package aims to quere data from Firefox such as the open windo
 Author: Duncan Temple Lang
 Maintainer: Duncan Temple Lang <duncan@r-project.org>
 Imports: RJSONIO, RSQLite
+License: BSD
