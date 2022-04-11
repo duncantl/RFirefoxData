@@ -7,7 +7,8 @@ R_decrypt(SEXP str, SEXP nels)
 {
     SEXP ans;
     SECItem inp, out;
-    
+    SECStatus status;
+	
     PROTECT(ans = Rf_allocVector(STRSXP, Rf_length(str)));
 
     inp.type = 0;
@@ -17,8 +18,8 @@ R_decrypt(SEXP str, SEXP nels)
 	inp.len = INTEGER(nels)[i];
         out.data = NULL;
         out.len = 0;	
-	PK11SDR_Decrypt(&inp, &out, NULL);
-	SET_STRING_ELT(ans, i, mkCharLen(out.data, out.len));
+	status = PK11SDR_Decrypt(&inp, &out, NULL);
+	SET_STRING_ELT(ans, i, status == SECSuccess ? mkCharLen(out.data, out.len) : R_NaString);
     }
     UNPROTECT(1);
     return(ans);
