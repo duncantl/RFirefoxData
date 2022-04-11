@@ -119,3 +119,70 @@ This allows us to
 db = conPlacesDB()
 dbListTable(db)
 ```
+
+
+## Profiles
+
+`getProfile()` returns the full path to the unique default profile, or the most recently used
+default profile.
+
+If you want a different profile, you can specify the uniquely identifying
+string  for that profile, e.g., 
+`getProfile("qs")` or `getProfile("^qs")` or `getProfile("Protected")`.
+
+You set the profile identified as an option with, e.g.,
+```r
+options(FirefoxProfile = "^qs")
+```
+
+
+`listProfiles(, TRUE)` lists all of the profiles.
+It returns a data.frame describing each profile.
+This includes 
++ the Name, 
++ the directory
++ whether this is a default profile
++ the label
++ the version of the profile
++ whether it is locked oor not
++ whether StartWithLastProfile is TRUE or FALSE
+
+
+
+## Passwords
+
+`readPasswords()` gets the passwords for the specified profile.
+By default, this returns a data.frame containing 
++ host
++ password
++ login/user name
+
+By default, the password is decrypted, but will print as XXX.
+The actual decrypted value(s) can be accessed directly
+to use as inputs to calls or to view.
+
+We can also get all of the information for each login-password pair with
+```r
+readPasswords(full = TRUE)
+```
+For each login-password, the resulting data.frame  includes the associated 
++ host
++ password
++ login
++ times the login was created, changed, last used
++ number of times used
++ URL for the form and corresponding fields in the HTML form
+
+
+
+
+
+
+## References
+
++ See https://medium.com/geekculture/how-to-hack-firefox-passwords-with-python-a394abf18016
+for information about the steps for accessing and decrypting the passwords.
+
++ [firefox_decrypt](https://github.com/unode/firefox_decrypt.git) is a Python application/program to access Firefox passwords 
+  for any of the profiles. 
+  
