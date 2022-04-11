@@ -9,6 +9,7 @@ These include
 + bookmarks
 + downloads
 + visit path
++ query passwords by host (and decrypt them)
 
 and general access to the places.sqlite database.
 
