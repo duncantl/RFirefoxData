@@ -22,15 +22,14 @@ function(firefox_decrypt = path.expand("~/Downloads/firefox_decrypt/firefox_decr
 `[.FirefoxPasswords` =
     # use partial matching of the host name, and not just the beginning.
     # e.g., x["ucdavis", ]  will match www.ucdavis.edu, etc.
-function(x, i, j, ...) 
+function(x, i, j, hide = TRUE, ...) 
 {
-    if(missing(i) || is.numeric(i) || is.logical(i))
+    if(!hide || missing(i) || is.numeric(i) || is.logical(i))
         ans = NextMethod()
     else {
         rows = grep(i, x[[1]])
         ans = base::`[`(x, rows, j, ...)
     }
-    
 
     if(is.data.frame(ans) &&  "password" %in% names(ans))
         class(ans) = "FirefoxPasswords"
@@ -69,6 +68,9 @@ readPasswords =
     # From JSON.
 function(profile = getProfile(), decrypt = TRUE)    
 {
+    if(!file.exists(profile))
+       profile = getProfile(profile)
+
     f = file.path(profile, "logins.json")
     if(!file.exists(f))
         stop("no logins.json file for profile ", basename(profile))
@@ -81,7 +83,7 @@ function(profile = getProfile(), decrypt = TRUE)
     names(ans) = c("host", "login", "password")
 
     if(decrypt) {
-        ans$password = structure(decryptString(ans$password), class = "Passwords")
+        ans$password = structure(decryptString(ans$password, profile), class = "Passwords")
         class(ans) = c("FirefoxPasswords", class(ans))
     }
     
@@ -91,10 +93,65 @@ function(profile = getProfile(), decrypt = TRUE)
 }
 
 getProfile =
-function(base = "~/Library/Application Support/Firefox/Profiles")
+function(id = getOption("FirefoxProfile", NA), base = "~/Library/Application Support/Firefox/Profiles")
 {
-    ff = list.files(base, full = TRUE)
+    ff = listProfiles(base)
+
+    if(!is.na(id))
+       return(if(length(i <- grep(id, basename(ff)))) ff[i] else NA)
+    
     info = file.info(ff)
     info = info[info$isdir,]
     rownames(info)[ which.max(info$atime) ]
+}
+
+listProfiles =
+function(base = "~/Library/Application Support/Firefox/Profiles", full = FALSE)
+{
+    ans = list.files(base, full.names = TRUE)
+    if(!full)
+        return(ans)
+    
+
+    ini = readINI(file.path(base, "profiles.ini"), ans)
+    mergePaths(ini, ans)
+}
+
+readINI =
+function(f)    
+{
+    ll = readLines(f)
+    w = grepl("^\\[", ll)
+
+    z = lapply(split(ll, cumsum(w)), mkProfileInfo)
+    exRbind(z)
+}
+
+exRbind =
+function(x)
+{
+    vars = unique(unlist(lapply(x, names)))
+
+    tmp = lapply(x, function(x)  {
+                       m = setdiff(vars, names(x))
+                       if(length(m))
+                          x[m] = NA
+                       x
+                   })
+    do.call(rbind, tmp)
+}
+
+
+mkProfileInfo =
+function(x)
+{
+    x = trimws(x)
+    x = x [ x != "" ]
+    els = strsplit(x[-1], "=")
+
+    vals = sapply(els, `[`, 2)
+    ans = as.data.frame(as.list(vals))
+    names(ans) = sapply(els, `[`, 1)
+    ans$label = gsub("^\\[|\\]$", "", x[1])
+    ans
 }
