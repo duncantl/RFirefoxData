@@ -2,11 +2,15 @@ NSSState = new.env()
 NSSState$initialized = FALSE
 
 decryptString =
-function(str)
+function(str, profile = getProfile())
 {
-    if(!NSSState$initialized)
-        if(.Call("R_NSS_Init", paste0("sql:", getProfile())) != 0)
+    if(!NSSState$initialized) {
+        if(.Call("R_NSS_Init", paste0("sql:", profile)) != 0)
             stop("Failed to initialize NSS3 correctly")
+
+        NSSState$initialized = TRUE
+    }
+
 
     if(is.character(str)) {
         data = lapply(str, base64decode)
