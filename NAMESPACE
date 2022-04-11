@@ -1,5 +1,9 @@
+useDynLib(RFirefoxData)
+
 import(RJSONIO)
 import(RSQLite)
+importFrom(base64enc, base64decode)
+
 export(bookmarks, bookmarkDF)
 
 export(fxTabList, tabInfo, oldTabs)
@@ -8,4 +12,15 @@ export(places)
 export(downloads)
 
 export(conPlacesDB)
+
+S3method(print, TimeOrderedTabs)
+
+export(readPasswords, getPasswords)
+
+S3method(print, FirefoxPasswords)
+S3method(print, Passwords)
+
+export(getProfile)
+export(listProfiles)
+export(readINI)
 

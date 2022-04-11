@@ -64,9 +64,9 @@ function(x, ...)
 
 ############################
 
-readPasswords =
+getPasswords = readPasswords =
     # From JSON.
-function(profile = getProfile(), decrypt = TRUE)    
+function(profile = getProfile(), decrypt = TRUE, full = FALSE)    
 {
     if(!file.exists(profile))
        profile = getProfile(profile)
@@ -78,80 +78,27 @@ function(profile = getProfile(), decrypt = TRUE)
     info = RJSONIO::fromJSON(f)
     logins = info$logins
 
-    v = c("hostname", "encryptedUsername", "encryptedPassword")
-    ans = as.data.frame(lapply(v, function(v) sapply(logins, `[[`, v)))
-    names(ans) = c("host", "login", "password")
+    if(full) {
+        ans = exRbind(lapply(logins, objToDF))
+        v = c("timeCreated", "timeLastUsed", "timePasswordChanged")
+        ans[v] = lapply(ans[v], function(x) structure(x/1000, class = c("POSIXct", "POSIXt")))
+    } else {
+        v = c("hostname", "encryptedUsername", "encryptedPassword")
+        ans = as.data.frame(lapply(v, function(v) sapply(logins, `[[`, v)))
+        names(ans) = v
+    }
 
     if(decrypt) {
-        ans$password = structure(decryptString(ans$password, profile), class = "Passwords")
+        ans$password = structure(decryptString(ans$encryptedPassword, profile), class = "Passwords")
+        ans$login = decryptString(ans$encryptedUsername, profile)
+        ans = ans[ !( names(ans) %in% c( "encryptedUsername", "encryptedPassword")) ]
         class(ans) = c("FirefoxPasswords", class(ans))
     }
     
-    
-    
     ans
 }
 
-getProfile =
-function(id = getOption("FirefoxProfile", NA), base = "~/Library/Application Support/Firefox/Profiles")
-{
-    ff = listProfiles(base)
-
-    if(!is.na(id))
-       return(if(length(i <- grep(id, basename(ff)))) ff[i] else NA)
-    
-    info = file.info(ff)
-    info = info[info$isdir,]
-    rownames(info)[ which.max(info$atime) ]
-}
-
-listProfiles =
-function(base = "~/Library/Application Support/Firefox/Profiles", full = FALSE)
-{
-    ans = list.files(base, full.names = TRUE)
-    if(!full)
-        return(ans)
-    
-
-    ini = readINI(file.path(base, "profiles.ini"), ans)
-    mergePaths(ini, ans)
-}
-
-readINI =
-function(f)    
-{
-    ll = readLines(f)
-    w = grepl("^\\[", ll)
-
-    z = lapply(split(ll, cumsum(w)), mkProfileInfo)
-    exRbind(z)
-}
-
-exRbind =
-function(x)
-{
-    vars = unique(unlist(lapply(x, names)))
-
-    tmp = lapply(x, function(x)  {
-                       m = setdiff(vars, names(x))
-                       if(length(m))
-                          x[m] = NA
-                       x
-                   })
-    do.call(rbind, tmp)
-}
 
 
-mkProfileInfo =
-function(x)
-{
-    x = trimws(x)
-    x = x [ x != "" ]
-    els = strsplit(x[-1], "=")
 
-    vals = sapply(els, `[`, 2)
-    ans = as.data.frame(as.list(vals))
-    names(ans) = sapply(els, `[`, 1)
-    ans$label = gsub("^\\[|\\]$", "", x[1])
-    ans
-}
+
