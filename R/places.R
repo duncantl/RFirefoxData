@@ -54,7 +54,7 @@ function(file = file.path(ProfileDir, "places.sqlite"),
 downloads = 
 function(file = file.path(ProfileDir, "places.sqlite"), con = connectPlaces(file))
 {
-   annos = dbGetQuery(db, "SELECT *, 
+   annos = dbGetQuery(con, "SELECT *, 
                             datetime(A.dateAdded/1000000, 'unixepoch', 'localtime') AS DateAdded,
                             datetime(A.lastModified/1000000, 'unixepoch', 'localtime') AS LastModified
                             FROM moz_annos AS A, moz_places AS P WHERE A.place_id = P.id")
@@ -80,7 +80,7 @@ function(x)
 visits =
 function(file = file.path(ProfileDir, "places.sqlite"), con = connectPlaces(file))
 {
-    ans = dbGetQuery(db, "SELECT *,
+    ans = dbGetQuery(con, "SELECT *,
                                 datetime( visit_date/1000000, 'unixepoch', 'localtime') AS visit_date,
                                 datetime( last_visit_date/1000000, 'unixepoch', 'localtime') AS last_visit_date
                                    FROM moz_historyvisits AS V,
