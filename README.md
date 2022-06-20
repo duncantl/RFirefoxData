@@ -181,8 +181,35 @@ For each login-password, the resulting data.frame  includes the associated
 ## References
 
 + See https://medium.com/geekculture/how-to-hack-firefox-passwords-with-python-a394abf18016
-for information about the steps for accessing and decrypting the passwords.
+  for information about the steps for accessing and decrypting the passwords.
 
 + [firefox_decrypt](https://github.com/unode/firefox_decrypt.git) is a Python application/program to access Firefox passwords 
   for any of the profiles. 
   
+
+
+## Installation
+
+You will need libnss and libnspr.
+
++ I built it from source on my older MacbookPro (Intel).
++ On the M1/Apple Silicon, I installed it from [homebrew](https://formulae.brew.sh/formula/nss).
+
+
+<--
+I had a version of nspr installed directly from source and then one 
+from brew.  The former was bad. had @excutable_path in the .dylib.
+
+On M1, I then needed to map the dynamic libraries to /usr/local/lib
+```
+install_name_tool -change @executable_path/libplds4.dylib /usr/local/lib/libplds4.dylib src/RFirefoxData.so 
+install_name_tool -change @executable_path/libplc4.dylib /usr/local/lib/libplc4.dylib src/RFirefoxData.so 
+install_name_tool -change @executable_path/libnspr4.dylib /usr/local/lib/libnspr4.dylib src/RFirefoxData.so 
+```
+But this did not suffice.
+The file /usr/local/lib/libnspr4.dylib, for example,  contained
+```
+@executable_path/libnspr4.dylib (compatibility version 1.0.0, current version 1.0.0)
+```
+Removing the .dylib's, include/nspr and  nspr.pc from /usr/local/ got things working.
+-->
