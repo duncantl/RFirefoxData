@@ -32,7 +32,13 @@ function(x = fxTabList(), combine = TRUE)
 winTabInfo =  # helper functon for tabInfo
 function(x)
 {
-   sapply(x$tabs, function(x) { i = x$index; structure(x$entries[[i]]$url, names = x$entries[[i]]$title) })
+    sapply(x$tabs, function(t) {
+                          i = t$index
+                          if(i <= length(t$entries))
+                              structure(t$entries[[i]]$url, names = t$entries[[i]]$title)
+                          else
+                              structure(NA, names = NA)
+                })
 }
 
 
