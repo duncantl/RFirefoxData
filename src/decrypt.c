@@ -1,5 +1,11 @@
+#if 0
 #include <nss/pk11sdr.h>
 #include <nss/nss.h>
+#else
+#include <pk11sdr.h>
+#include <nss.h>
+#endif
+
 #include <Rdefines.h>
 
 SEXP
