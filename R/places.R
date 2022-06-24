@@ -45,7 +45,7 @@ function(file = file.path(ProfileDir, "places.sqlite"),
                          con = dbConnect(driver, file2)
                          # RSQLite will close the connection but we need to remove
                          # the file we copied.
-                         reg.finalizer(con@Id, function(obj)  file.remove(file2) )
+                         reg.finalizer(con@ptr, function(obj)  file.remove(file2) )
                          con
                      })
 }
