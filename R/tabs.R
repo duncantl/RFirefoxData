@@ -34,9 +34,13 @@ function(x)
 {
     sapply(x$tabs, function(t) {
                           i = t$index
-                          if(i <= length(t$entries))
-                              structure(t$entries[[i]]$url, names = t$entries[[i]]$title)
-                          else
+                          if(i <= length(t$entries)) {
+                              e = t$entries[[i]]
+                              if(is.list(e))
+                                  structure(e$url, names = e$title)
+                              else
+                                  structure(e["url"], names = e["title"])                                  
+                          } else
                               structure(NA, names = NA)
                 })
 }
@@ -49,13 +53,16 @@ function(tabs = fxTabList(), info = tabInfo(tabs))
     la = sapply(tabs$windows, function(w) structure(sapply(w$tabs, `[[`, "lastAccessed")/1000, class = c("POSIXt", "POSIXct")))
 
     d = data.frame(title = unlist(lapply(info, names)),
-        winNum = rep(seq(along.with = info), sapply(info, length)),
+                   winNum = rep(seq(along.with = info), sapply(info, length)),
                    tabNum = unlist(lapply(la, function(x) seq_len(length(x)))),
                    lastAccessed = structure(unlist(la), class = c("POSIXt", "POSIXct")),
                    window = rep(names(info), sapply(info, length)),
                    url = unlist(info)
         )
     rownames(d) = NULL
+
+    if(require(XML))
+        d$host = sapply(d$url, function(x) parseURI(x)$server)
     
     structure(d[order(d$lastAccessed),], class = c("TimeOrderedTabs", "data.frame"))
 }
