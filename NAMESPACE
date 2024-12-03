@@ -6,7 +6,7 @@ importFrom(base64enc, base64decode)
 
 export(bookmarks, bookmarkDF)
 
-export(fxTabList, tabInfo, oldTabs)
+export(fxTabList, tabInfo, oldTabs, dupTabs)
 export(places)
 
 export(downloads)
@@ -24,3 +24,5 @@ export(getProfile)
 export(listProfiles)
 export(readINI)
 
+
+export(today)
