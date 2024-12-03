@@ -10,5 +10,6 @@ Description: This package aims to quere data from Firefox such as the open windo
  This and the AutoClose extension I wrote tries to help me keep the number of tabs to a "reasonable" number.
 Author: Duncan Temple Lang
 Maintainer: Duncan Temple Lang <duncan@r-project.org>
+SystemRequirements: lz4jsoncat
 Imports: RJSONIO, RSQLite
 License: BSD
