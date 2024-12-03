@@ -6,7 +6,7 @@
 # https://tableplus.com/blog/2018/07/sqlite-how-to-use-datetime-value.html
 
 
-
+today = function() as.POSIXct(strptime(sprintf("%s 00:00:00", Sys.Date()), "%Y-%m-%d %H:%M:%S"))
 
 places =
 function(file = file.path(ProfileDir, "places.sqlite"), con = connectPlaces(file))
