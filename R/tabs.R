@@ -62,7 +62,7 @@ function(tabs = fxTabList(), info = tabInfo(tabs))
     rownames(d) = NULL
 
     if(require(XML))
-        d$host = sapply(d$url, function(x) parseURI(x)$server)
+        d$host = sapply(d$url, function(x) tryCatch(parseURI(x)$server, error  = function(...) NA))
     
     structure(d[order(d$lastAccessed),], class = c("TimeOrderedTabs", "data.frame"))
 }
@@ -77,4 +77,15 @@ function(x, ...)
     x[[1]] = substring(x[[1]], 1, w1)
     x[[5]] = substring(x[[5]], 1, w2)
     NextMethod("print")
+}
+
+dupTabs =
+function(tabs)
+{
+    w = duplicated(tabs$url)
+    if(!any(w))
+        return(list())
+    
+    tb2 = tabs[w,]
+    split(tb2, tb2$url)
 }
