@@ -86,6 +86,6 @@ function(tabs)
     if(!any(w))
         return(list())
     
-    tb2 = tabs[w,]
+    tb2 = tabs[ tabs$url %in% tabs$url[w], ]
     split(tb2, tb2$url)
 }
