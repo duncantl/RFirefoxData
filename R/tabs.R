@@ -89,3 +89,16 @@ function(tabs)
     tb2 = tabs[ tabs$url %in% tabs$url[w], ]
     split(tb2, tb2$url)
 }
+
+
+windows =
+    # Get the names of the windows and the corresponding number.
+    # Currently a data.frame with 2 columns.
+    # Could be a character vector with the window numbers being implicit.
+    # Or an integer vector with names being the window titles/labels.
+function(tdf)
+{
+    id = tapply(tdf, tdf$winNum, function(x) x$window)
+    data.frame(winNum = as.integer(names(id)),
+               name = as.character(id))
+}
