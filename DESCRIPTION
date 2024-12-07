@@ -1,5 +1,5 @@
 Package: RFirefoxData
-Version: 0.1-0
+Version: 0.2-0
 Title: Get data from Firefox browser
 Description: This package aims to quere data from Firefox such as the open windows and tabs,
  bookmarks, the history of URLs visited, logins for accounts, file handler actions,
@@ -11,5 +11,5 @@ Description: This package aims to quere data from Firefox such as the open windo
 Author: Duncan Temple Lang
 Maintainer: Duncan Temple Lang <duncan@r-project.org>
 SystemRequirements: lz4jsoncat
-Imports: RJSONIO, RSQLite
+Imports: RJSONIO, RSQLite, base64enc
 License: BSD
