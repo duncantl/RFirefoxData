@@ -69,11 +69,11 @@ function(tabs = fxTabList(), info = tabInfo(tabs))
 
 
 print.TimeOrderedTabs =
-function(x, ...)
+function(x, pct = .7, ...)
 {
     x = x[, 1:5]
     w = options()$width
-    w1 = w2 = w*.8/2
+    w1 = w2 = w*pct/2
     x[[1]] = substring(x[[1]], 1, w1)
     x[[5]] = substring(x[[5]], 1, w2)
     NextMethod("print")
