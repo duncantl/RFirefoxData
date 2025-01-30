@@ -1,3 +1,0 @@
-PKG_CPPFLAGS=-I/usr/local/include/nspr
-PKG_LIBS=-L/usr/local/lib -lnss3
-#-lnspr
