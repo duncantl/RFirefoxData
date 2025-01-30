@@ -1,3 +1,5 @@
+#ifdef HAVE_NSS
+
 #if 0
 #include <nss/pk11sdr.h>
 #include <nss/nss.h>
@@ -39,3 +41,34 @@ R_NSS_Init(SEXP config)
     val = NSS_Init(CHAR(STRING_ELT(config, 0)));
     return(ScalarInteger(val));
 }
+
+#else
+
+#include <Rdefines.h>
+
+#ifndef PROBLEM
+
+#define R_PROBLEM_BUFSIZE	4096
+#define PROBLEM			{char R_problem_buf[R_PROBLEM_BUFSIZE];(snprintf)(R_problem_buf, R_PROBLEM_BUFSIZE,
+#define ERROR			),Rf_error(R_problem_buf);}
+#define WARNING(x)		),Rf_warning(R_problem_buf);}
+#define WARN			WARNING(NULL)
+
+#endif
+
+
+SEXP
+R_decrypt(SEXP str, SEXP nels)
+{
+    PROBLEM "NSS_Init is not available"
+	ERROR;
+}
+
+
+SEXP
+R_NSS_Init(SEXP config)
+{
+    PROBLEM "NSS_Init is not available"
+	ERROR;
+}
+#endif
